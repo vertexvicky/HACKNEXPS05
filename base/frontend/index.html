@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Forensics &amp; Temporal Intelligence Workstation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="workstation">
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="system-badge">CCTV-VMS</div>
+                <div class="title-group">
+                    <h1 class="system-title">VIDEO INTELLIGENCE &amp; TEMPORAL FORENSICS</h1>
+                    <span class="system-subtitle">SAMPLING RATE: 1.0 FPS FIXED &bull; INFERENCE: GEMMA-4 MULTIMODAL</span>
+                </div>
+            </div>
+
+            <div class="header-telemetry">
+                <div class="telemetry-item">
+                    <span class="tel-label">SYSTEM STATE</span>
+                    <span id="telStatus" class="tel-value status-idle">STANDBY</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="tel-label">FPS ARCHITECTURE</span>
+                    <span class="tel-value">1.00 FPS DEDICATED</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="tel-label">INFERENCE ENGINE</span>
+                    <span class="tel-value font-mono">gemma-4-26b-a4b-it</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="tel-label">TOTAL FRAMES</span>
+                    <span id="telTotalFrames" class="tel-value font-mono">0</span>
+                </div>
+                <button id="themeToggleBtn" class="theme-switch" title="Toggle Theme (Dark / Light)">
+                    <span id="themeLabel">DARK</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="workspace-grid">
+            <section class="viewport-section">
+                <div class="panel player-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-wrap">
+                            <span class="panel-icon">&#9658;</span>
+                            <span class="panel-title">PRIMARY SURVEILLANCE FEED</span>
+                        </div>
+                        <div class="panel-actions">
+                            <span id="hudSmpte" class="smpte-display font-mono">00:00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="viewport-container" id="videoViewport">
+                        <video id="mainVideoPlayer" class="surveillance-player" preload="auto">
+                            Your browser does not support HTML5 video.
+                        </video>
+                        <div class="surveillance-overlay" id="surveillanceHud">
+                            <div class="hud-top">
+                                <span class="hud-rec"><span class="rec-dot"></span> FEED-01</span>
+                                <span id="hudResolution" class="hud-metric font-mono">-- x --</span>
+                            </div>
+                            <div class="hud-bottom">
+                                <span id="hudTimeSec" class="hud-metric font-mono">T+ 00.00s</span>
+                                <span id="hudFrameIndex" class="hud-metric font-mono">FRAME #0000</span>
+                            </div>
+                        </div>
+
+                        <div id="dropzonePrompt" class="dropzone-overlay">
+                            <div class="dropzone-box" id="dropzoneBox">
+                                <input type="file" id="videoFileInput" accept="video/mp4,video/avi,video/mov,video/mkv" class="file-hidden">
+                                <div class="dropzone-icon">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                </div>
+                                <h3 class="dropzone-heading">INGEST SURVEILLANCE FOOTAGE</h3>
+                                <p class="dropzone-sub">Drop MP4 / MOV file here or click to browse</p>
+                                <div class="dropzone-spec">1 FPS Normalized Sampling &bull; Direct Google GenAI API Connection</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="ingestProgressRow" class="ingest-progress-row hidden">
+                        <div class="progress-details">
+                            <span id="ingestLabel" class="progress-task font-mono">SAMPLING AT 1.0 FPS...</span>
+                            <span id="ingestPct" class="progress-percent font-mono">0%</span>
+                        </div>
+                        <div class="progress-rail">
+                            <div id="ingestBar" class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="playback-controls-bar">
+                        <div class="btn-group">
+                            <button id="btnPlayPause" class="ctrl-btn" title="Play/Pause">&#9658; PLAY</button>
+                            <button id="btnStepBack" class="ctrl-btn font-mono" title="Step Back 1s">-1s</button>
+                            <button id="btnStepFwd" class="ctrl-btn font-mono" title="Step Forward 1s">+1s</button>
+                        </div>
+
+                        <div class="timeline-slider-wrap">
+                            <input type="range" id="videoTimeline" class="timeline-slider" min="0" max="100" value="0" step="1">
+                        </div>
+
+                        <div class="btn-group">
+                            <select id="playbackRateSelect" class="ctrl-select font-mono">
+                                <option value="0.5">0.5x</option>
+                                <option value="1.0" selected>1.0x</option>
+                                <option value="2.0">2.0x</option>
+                                <option value="4.0">4.0x</option>
+                            </select>
+                            <button id="btnUploadNew" class="ctrl-btn" title="Upload New Video">NEW FEED</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel frame-inspector-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-wrap">
+                            <span class="panel-icon">&#9635;</span>
+                            <span class="panel-title">1.0 FPS FRAME-ACCURATE TELEMETRY</span>
+                        </div>
+                        <div class="panel-actions">
+                            <span id="activeFrameId" class="panel-badge font-mono">FRAME: --</span>
+                        </div>
+                    </div>
+
+                    <div class="inspector-body">
+                        <div class="frame-viewer-box">
+                            <img id="activeFrameImg" src="" alt="Frame Telemetry" class="inspector-img hidden">
+                            <div id="frameEmptyState" class="inspector-empty">
+                                <p>Select or jump to any timestamp to review the corresponding 1 FPS frame evidence</p>
+                            </div>
+                        </div>
+                        <div class="frame-meta-table">
+                            <div class="meta-row">
+                                <span class="meta-key">CURRENT SECOND</span>
+                                <span id="metaSec" class="meta-val font-mono">--</span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-key">SMPTE TIMECODE</span>
+                                <span id="metaSmpte" class="meta-val font-mono">--</span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-key">SAMPLING METHOD</span>
+                                <span class="meta-val font-mono">OpenCV 1.0 FPS Fixed</span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-key">TEMPORAL SYNC</span>
+                                <span class="meta-val font-mono text-success">LOCKED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="console-section">
+                <div class="panel chat-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-wrap">
+                            <span class="panel-icon">&#9881;</span>
+                            <span class="panel-title">TEMPORAL REASONING &amp; QUERY CONSOLE</span>
+                        </div>
+                        <div class="panel-actions">
+                            <button id="btnResetChat" class="action-link font-mono">CLEAR CONSOLE</button>
+                        </div>
+                    </div>
+
+                    <div class="preset-queries-bar">
+                        <span class="preset-label font-mono">QUICK QUERIES:</span>
+                        <button class="preset-chip" data-query="List every vehicle that appears in the video along with exact timestamps.">Vehicles &amp; Cars</button>
+                        <button class="preset-chip" data-query="Describe all persons and actions observed with their timestamps.">Pedestrians &amp; Actions</button>
+                        <button class="preset-chip" data-query="Generate a chronological timeline of all events in the video.">Chronological Timeline</button>
+                    </div>
+
+                    <div id="chatConsoleMessages" class="console-body">
+                        <div class="terminal-entry system-entry">
+                            <div class="entry-meta font-mono">[SYSTEM INITIALIZATION]</div>
+                            <div class="entry-content">
+                                Workstation online. Waiting for video ingestion. Video will be sampled at 1.0 FPS and connected directly to the Gemma 4 Multimodal model for forensic temporal analysis.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="console-input-area">
+                        <form id="consoleForm" class="console-form">
+                            <div class="input-container">
+                                <span class="prompt-symbol font-mono">&gt;</span>
+                                <textarea id="consoleInput" rows="1" placeholder="Query vehicles, recognitions, events, timestamps..." disabled></textarea>
+                            </div>
+                            <button type="submit" id="btnConsoleSend" class="console-send-btn font-mono" disabled>
+                                EXECUTE
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

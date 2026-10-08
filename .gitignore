@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Model weights & Large checkpoint artifacts
+*.pt
+*.pth
+*.onnx
+*.engine
+*.bin
+
+# Video Storage & Frame Caches
+base/backend/uploads/*
+!base/backend/uploads/.gitkeep
+base/backend/rendered/frames/*
+!base/backend/rendered/frames/.gitkeep
+base/backend/rendered/video_1fps.mp4
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.pytest_cache/
